@@ -1,32 +1,27 @@
 import Util.Util;
-import org.openqa.selenium.edge.EdgeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.annotations.*;
-import com.beust.ah.A;
 import ge.tbcitacademy.data.Constants;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import org.testng.annotations.*;
 
 import java.time.Duration;
-import java.util.HashMap;
-import java.util.stream.Collectors;
+import java.util.List;
 
 public class LandingPageTests {
 
     private WebDriver driver;
     private JavascriptExecutor jsExecutor;
+    private Actions actions;
     private WebDriverWait wait;
 
 
@@ -52,6 +47,7 @@ public class LandingPageTests {
         driver.manage().window().maximize();
         driver.get(Constants.SWOOPLINK);
         jsExecutor = (JavascriptExecutor) driver;
+        actions = new Actions(driver);
         wait = new WebDriverWait(driver, Duration.ofSeconds(15));
     }
 
@@ -68,7 +64,7 @@ public class LandingPageTests {
         WebElement sporti = wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.xpath("//h4[text()='სპორტი']/parent::div"))
         );
-        Actions actions = new Actions(driver);
+
         actions.moveToElement(sporti).perform();
         WebElement kartingebi = wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.xpath("//h4[text()='კარტინგი']"))
@@ -79,6 +75,7 @@ public class LandingPageTests {
         WebElement mainNav = wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.cssSelector("nav.py-2")
         ));
+        // es aris category chainshi arsebuli yvela teqsti (chven shemtxvevashi მთავარი სპორტი კარტინგი)
         List<String> text = mainNav.findElements(By.xpath(".//a//p"))
                 .stream()
                 .map(WebElement::getText)
@@ -90,6 +87,8 @@ public class LandingPageTests {
 
     @Test
     public void logoTest(){
+        // aq DZALIAN ISHVIATAD errors migdebs magram daaxloebit 99.99% it var darwmunebuli rom kodis brali ar aris
+        // meubneba sxva elementi efarebao da eg elementi arasebobs
         WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//a[p[text()='დასვენება']]")));
         Util.goToLink(driver, wait, element);
         WebElement swoopLink = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//img[@alt='swoop']/parent::a")));

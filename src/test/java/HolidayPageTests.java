@@ -1,27 +1,21 @@
 import Util.Util;
-import org.openqa.selenium.edge.EdgeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.annotations.*;
-import com.beust.ah.A;
 import ge.tbcitacademy.data.Constants;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import org.testng.annotations.*;
 
 import java.time.Duration;
-import java.util.HashMap;
-import java.util.stream.Collectors;
+import java.util.Comparator;
+import java.util.List;
 
 public class HolidayPageTests {
 
@@ -64,6 +58,7 @@ public class HolidayPageTests {
 
     @Test
     public void descendingOrderTest() {
+        // aq yvelaferi gasagebi unda iyos wesit, funqciebshi maq gatanili mteli saqme
         WebElement element = driver.findElement(By.xpath("//a[p[text()='დასვენება']]"));
         Util.goToLink(driver, wait, element);
 
@@ -77,6 +72,7 @@ public class HolidayPageTests {
 
     @Test
     public void ascendingOrderTest() {
+        // aqac yvelaferi gasagebi unda iyos wesit, funqciebshi maq gatanili mteli saqme
         WebElement element = driver.findElement(By.xpath("//a[p[text()='დასვენება']]"));
         Util.goToLink(driver, wait, element);
 
@@ -90,6 +86,7 @@ public class HolidayPageTests {
 
     @Test
     public void filterTest() {
+        // aqac yvelaferi gasagebi unda iyos wesit, funqciebshi maq gatanili mteli saqme
         WebElement element = driver.findElement(By.xpath("//a[p[text()='დასვენება']]"));
         Util.goToLink(driver, wait, element);
         WebElement element1 = driver.findElement(By.xpath("//h5[text()='მთის კურორტები']"));
@@ -97,15 +94,15 @@ public class HolidayPageTests {
         WebElement temp = wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.xpath("//input[@id='radio-გადახდის ტიპი-1']")
         ));
-        WebElement spanElement = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                By.xpath("//span[text()='გადახდის ტიპი']")
-        ));
         jsExecutor.executeScript("arguments[0].scrollIntoView({block: 'center'});", temp);
         temp.click();
+        //aqamde ubralod filtrebi avirchie
+
         jsExecutor.executeScript("window.scrollTo(0, 0);");
         WebElement mainDiv = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                By.cssSelector("div.grid.laptop\\:grid-cols-3.grid-flow-row.gap-x-4.gap-y-8.grid-cols-2")
+                By.cssSelector("div.grid-flow-row.gap-x-4.gap-y-8")
         ));
+        // es aris is div sadac yvela offer aris ganlagebuli
         //tu es ipova eseigi martlac tavzea radganac preceding aris
         WebElement precedingDiv = mainDiv.findElement(By.xpath("preceding::div//p[text()='სრული გადახდა']"));
         Assert.assertNotNull(precedingDiv);
@@ -123,22 +120,26 @@ public class HolidayPageTests {
         Util.goToLink(driver, wait, element);
 
         WebElement temp = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                By.cssSelector(".text-primary_green-100-value.bg-primary_green-10-value.h-12.min-w-max")
+                By.cssSelector(".text-primary_green-100-value.bg-primary_green-10-value")
         ));
 
-        jsExecutor.executeScript("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", temp);
+        jsExecutor.executeScript("arguments[0].scrollIntoView({block: 'center'});", temp);
 
         WebElement dan = driver.findElement(By.xpath("//p[text()='დან']/following-sibling::input"));
 
         WebElement mde = driver.findElement(By.xpath("//p[text()='მდე']/following-sibling::input"));
 
-        dan.sendKeys("400");
-        mde.sendKeys("500");
+        //aq ubralod konstantebidan shemaq fasi
+        dan.sendKeys(Constants.PRICEMIN);
+        mde.sendKeys(Constants.PRICEMAX);
 
         Util.goToLink(driver,wait,temp);
 
         List<Double> offersList = Util.getEveryOffer(driver, wait, jsExecutor, false);
-        List<Double> streamedList = offersList.stream().filter(offer -> offer >= 400 && offer <= 500).toList();
+        List<Double> streamedList = offersList.stream().
+                filter(offer -> offer >= Integer.parseInt(Constants.PRICEMIN) &&
+                        offer <= Integer.parseInt(Constants.PRICEMAX)).toList();
+        // vamowmeb rom yvela mnishvneloba mag shualedshia, tu es simartlea mashin sigrdze igive eqnebat listebs
         Assert.assertEquals(offersList.size(), streamedList.size());
     }
 
