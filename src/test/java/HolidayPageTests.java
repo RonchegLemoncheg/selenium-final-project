@@ -95,6 +95,8 @@ public class HolidayPageTests {
                 By.xpath("//input[@id='radio-გადახდის ტიპი-1']")
         ));
         jsExecutor.executeScript("arguments[0].scrollIntoView({block: 'center'});", temp);
+        // es firefoxis gamo miweria
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("div.fixed.min-w-screen.min-h-screen.duration-300.ease-out")));
         temp.click();
         //aqamde ubralod filtrebi avirchie
 

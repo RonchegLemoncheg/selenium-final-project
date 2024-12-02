@@ -46,11 +46,11 @@ public class Util {
         // am funqcias xandaxan imitom viyeneb rom ubralod ragacas davakliko
         // ucnauri wait-is xazi firefoxis gamo miweria, amitomac viyeneb am funqcias ragacas rom davachiro
         // tavidan rom ar momiwios am xazis dawera yvela daclickebaze
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("div.fixed.min-w-screen.min-h-screen.duration-300.ease-out")));
         String url = driver.getCurrentUrl();
         wait.until(ExpectedConditions.visibilityOf(element));
         wait.until(ExpectedConditions.elementToBeClickable(element));
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", element);
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("div.fixed.min-w-screen.min-h-screen.duration-300.ease-out")));
         element.click();
         wait.until(ExpectedConditions.not(ExpectedConditions.urlToBe(url)));
         // es xazic firefoxis gamo miweria
