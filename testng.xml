@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+
+<suite name="TestSuite" thread-count="3" parallel="tests">
+    <test name="ChromeTest">
+        <parameter name="browserType" value="chrome"/>
+        <classes>
+            <class name="LandingPageTests"/>
+            <class name="MoviePageTests"/>
+            <class name="HolidayPageTests"/>
+        </classes>
+    </test>
+        <test name="FirefoxTest">
+            <parameter name="browserType" value="firefox"/>
+            <classes>
+                <class name="LandingPageTests"/>
+                <class name="MoviePageTests"/>
+                <class name="HolidayPageTests"/>
+            </classes>
+        </test>
+    <test name="EdgeTest">
+        <parameter name="browserType" value="edge"/>
+        <classes>
+            <class name="LandingPageTests"/>
+            <class name="MoviePageTests"/>
+            <class name="HolidayPageTests"/>
+        </classes>
+    </test>
+</suite>
