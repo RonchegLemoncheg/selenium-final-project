@@ -140,7 +140,7 @@ public class MoviePageTests {
 
         // aq erti error iqneba mxolod da vamowmeb rom emailis error aris
         WebElement error = driver.findElement(By.xpath("//p[contains(@class, 'error')]"));
-        Assert.assertEquals(error.getText(),"ჩაწერე ელფოსტა");
+        Assert.assertEquals(error.getText(),Constants.EMAILERRORMESSAGE);
     }
 
 }

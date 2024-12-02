@@ -24,7 +24,7 @@ public class Util {
             String numericPart = text.replaceAll("[^\\d.]", "");
             return Double.parseDouble(numericPart);
         } catch (Exception ex) {
-            System.out.println("Error");
+            System.out.println(Constants.PRICEERRORMESSAGE);
             return NaN;
         }
 

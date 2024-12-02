@@ -13,6 +13,8 @@ public class Constants {
     public static final String YEAR = "2005";
     public static final String PHONENUMBER = "555707090";
     public static final String SMSCODE = "5656";
+    public static final String EMAILERRORMESSAGE = "ჩაწერე ელფოსტა";
+    public static final String PRICEERRORMESSAGE = "Invalid argument, couldn't get the price";
 
 
 }
