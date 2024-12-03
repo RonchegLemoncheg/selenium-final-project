@@ -17,44 +17,7 @@ import java.time.Duration;
 import java.util.Comparator;
 import java.util.List;
 
-public class HolidayPageTests {
-
-    private WebDriver driver;
-    private JavascriptExecutor jsExecutor;
-    private WebDriverWait wait;
-
-
-    @BeforeClass
-
-    @Parameters("browserType")
-    public void setup(@Optional("chrome") String browserType) {
-        switch (browserType.toLowerCase()) {
-            case "chrome":
-                WebDriverManager.chromedriver().setup();
-                driver = new ChromeDriver();
-                break;
-            case "firefox":
-                WebDriverManager.firefoxdriver().setup();
-                driver = new FirefoxDriver();
-                break;
-            case "edge":
-                WebDriverManager.edgedriver().setup();
-                driver = new EdgeDriver();
-                break;
-            default:
-                throw new IllegalArgumentException("Error");
-        }
-        driver.manage().window().maximize();
-        driver.get(Constants.SWOOPLINK);
-        jsExecutor = (JavascriptExecutor) driver;
-        wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-    }
-
-
-    @AfterClass
-    public void tearDown() {
-        driver.quit();
-    }
+public class HolidayPageTests extends BaseTest{
 
     @Test
     public void descendingOrderTest() {
