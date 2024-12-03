@@ -137,6 +137,10 @@ public class HolidayPageTests {
 
         Util.goToLink(driver,wait,temp);
 
+        //aq vamowmeb ubralod tu ipova mag fashi rame, tu veraferi ipova errors visvri
+        boolean noSuchOffers = !driver.findElements(By.xpath("//h2[text()='შეთავაზება არ მოიძებნა']")).isEmpty();
+        if(noSuchOffers) throw new RuntimeException(Constants.PRICEERROR);
+
         List<Double> offersList = Util.getEveryOffer(driver, wait, jsExecutor, false);
         List<Double> streamedList = offersList.stream().
                 filter(offer -> offer >= Integer.parseInt(Constants.PRICEMIN) &&

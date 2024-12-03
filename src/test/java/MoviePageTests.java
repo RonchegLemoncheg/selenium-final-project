@@ -12,6 +12,9 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
+
+import java.util.List;
+
 import org.testng.annotations.*;
 
 import java.awt.*;
@@ -28,7 +31,7 @@ public class MoviePageTests {
     @BeforeClass
 
     @Parameters("browserType")
-    public void setup(@Optional("firefox") String browserType) {
+    public void setup(@Optional("chrome") String browserType) {
         switch (browserType.toLowerCase()) {
             case "chrome":
                 WebDriverManager.chromedriver().setup();
@@ -59,29 +62,40 @@ public class MoviePageTests {
     }
 
     @Test
-    public void movieTest(){
+    public void movieTest() {
         WebElement element = driver.findElement(By.xpath("//a[p[text()='კინო']]"));
-        Util.goToLink(driver,wait,element);
+        Util.goToLink(driver, wait, element);
         //aq ubralod pirvel kinos virchev
         WebElement div = wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.cssSelector(".flex.flex-col.w-full.mb-6")
         ));
-        wait.until(e -> !div.findElements(By.xpath("./div//a")).isEmpty());
-        WebElement firstMovie = div.findElement(By.xpath("./div//a"));
+        wait.until(e -> !div.findElements(By.cssSelector("a[href]:not([href*='/movies/bar/'")).isEmpty());
+        List<String> moviesLink = div.findElements(By.cssSelector("a[href]:not([href*='/movies/bar/'"))
+                .stream().map(e -> e.getAttribute("href")).toList();
 
-        //aqve vigeb kinos saxels mere rom ar vedzebo
-        WebElement firstMovieDesc = firstMovie.findElement(By.xpath(".//div[contains(@class, 'flex-col') and contains(@class, 'gap-1')]"));
-        String movieName = firstMovieDesc.findElement(By.tagName("h3")).getText();
-        // linkze suratit gadavdivar radgan firefoxs arshevboda ise
-        WebElement image = driver.findElement(By.xpath("//img[@alt='" + movieName + "']"));
-        Util.goToLink(driver,wait,image);
+        // aq mere davinaxe rom button yofila kinoteatristvis amitomac ese vtoveb
+        for (int i = 0; i < moviesLink.size(); i++) {
+            String url = driver.getCurrentUrl();
+            driver.get(moviesLink.get(i));
+            wait.until(ExpectedConditions.not(ExpectedConditions.urlToBe(url)));
+            // vnaxulob kinos tu aqvs ist pointi
+            List<WebElement> elements = driver.findElements(By.xpath("//h3[text()='" + Constants.CINEMANAME + "']"));
+            if (!elements.isEmpty())
+                break;
+            if (i == moviesLink.size() - 1) {
+                // ar arsebobs kino ist pointit
+                throw new RuntimeException(Constants.MOVIEERROR);
+            }
+        }
 
-        // aq pirobashi iyo cavea gamoyofili da agar gamaq constantebshi
+        String movieName = driver.findElement(By.cssSelector("h1.text-xl.font-tbcx-bold")).getText();
+
         WebElement cavea = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                By.xpath("//h3[text()='კავეა ისთ ფოინთი']")
+                By.xpath("//h3[text()='" + Constants.CINEMANAME + "']")
         ));
         jsExecutor.executeScript("arguments[0].scrollIntoView({block: 'center'});", cavea);
         String cinemaName = cavea.getText();
+
 
         //es aris is droebis chamonatvali, mand shevdivar da bolos vigeb
         WebElement mainDiv = cavea.findElement(By.xpath("./ancestor::div[contains(@class, 'flex-col') and contains(@class, 'gap-6')]"));
@@ -96,7 +110,7 @@ public class MoviePageTests {
         }
         String hourTime = lastOptionDesc.findElement(By.cssSelector(".leading-6")).getText();
 
-        Util.goToLink(driver,wait,lastOption);
+        Util.goToLink(driver, wait, lastOption);
 
         WebElement mainDivTemp = wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.cssSelector("div.max-tablet\\:hidden")
@@ -109,9 +123,9 @@ public class MoviePageTests {
         String tempCinemaName = mainDivTemp.findElement(By.xpath(".//p[1]")).getText();
         String tempDate = mainDivTemp.findElement(By.xpath(".//p[2]")).getText();
         // aq vamowmeb rom cheshmariti informaciaa mocemuli
-        Assert.assertEquals(tempMovieName,movieName);
+        Assert.assertEquals(tempMovieName, movieName);
         Assert.assertTrue(tempDate.contains(monthAndDate) && tempDate.contains(hourTime));
-        Assert.assertEquals(tempCinemaName,cinemaName);
+        Assert.assertEquals(tempCinemaName, cinemaName);
 
         // es pirveli aris tavisufalis feri (wre ro iyo)
         WebElement green = wait.until(ExpectedConditions.visibilityOfElementLocated(
@@ -132,15 +146,15 @@ public class MoviePageTests {
 
         Assert.assertNotEquals(colorFromHex, colorFromRgba);
 
-        Util.goToLink(driver,wait,divElement);
+        Util.goToLink(driver, wait, divElement);
         WebElement link = driver.findElement(By.linkText("შექმენი"));
-        Util.goToLink(driver,wait,link);
+        Util.goToLink(driver, wait, link);
         //es dzaan didi iyo da utilshi gavitane, constantebs vxmarob iq
-        Util.register(jsExecutor,wait);
+        Util.register(jsExecutor, wait);
 
         // aq erti error iqneba mxolod da vamowmeb rom emailis error aris
         WebElement error = driver.findElement(By.xpath("//p[contains(@class, 'error')]"));
-        Assert.assertEquals(error.getText(),Constants.EMAILERRORMESSAGE);
+        Assert.assertEquals(error.getText(), Constants.EMAILERRORMESSAGE);
     }
 
 }
