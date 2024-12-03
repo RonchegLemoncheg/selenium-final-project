@@ -255,5 +255,12 @@ public class Util {
         button.click();
     }
 
+    public static WebElement getLastTimeOption(WebElement cavea){
+        WebElement mainDiv = cavea.findElement(By.xpath("./ancestor::div[contains(@class, 'flex-col') and contains(@class, 'gap-6')]"));
+        WebElement options = mainDiv.findElement(By.xpath(".//div[contains(@class, 'grid') and contains(@class, 'grid-cols-2')]"));
+        return options.findElement(By.xpath(".//div[contains(@class, 'cursor-pointer')][last()]"));
+    }
+
+
 
 }

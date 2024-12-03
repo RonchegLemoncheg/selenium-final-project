@@ -40,9 +40,26 @@ public class MoviePageTests extends BaseTest{
             driver.get(moviesLink.get(i));
             wait.until(ExpectedConditions.not(ExpectedConditions.urlToBe(url)));
             // vnaxulob kinos tu aqvs ist pointi
-            List<WebElement> elements = driver.findElements(By.xpath("//h3[text()='" + Constants.CINEMANAME + "']"));
-            if (!elements.isEmpty())
-                break;
+            boolean hasCinema = driver.findElements(By.xpath("//h3[text()='" + Constants.CINEMANAME + "']")).isEmpty();
+            if (!hasCinema){
+                // exla vedzeb ist pointshi tu aris adgilebi, tu ar aris sxvas vedzeb
+                WebElement cavea = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                        By.xpath("//h3[text()='" + Constants.CINEMANAME + "']")
+                ));
+                jsExecutor.executeScript("arguments[0].scrollIntoView({block: 'center'});", cavea);
+                WebElement lastOption = Util.getLastTimeOption(cavea);
+                Util.goToLink(driver,wait,lastOption);
+                // es aris mwvane skamebi
+                boolean noSuchOffers = driver.findElements(By.xpath("//div[@class='cursor-pointer ']")).isEmpty();
+                //tu erti adgili mainc aris mashin shesaferisia
+                if(!noSuchOffers){
+                    String tempUrl = driver.getCurrentUrl();
+                    driver.get(moviesLink.get(i));
+                    wait.until(ExpectedConditions.not(ExpectedConditions.urlToBe(tempUrl)));
+                    break;
+                }
+            }
+
             if (i == moviesLink.size() - 1) {
                 // ar arsebobs kino ist pointit
                 throw new RuntimeException(Constants.MOVIEERROR);
@@ -59,9 +76,7 @@ public class MoviePageTests extends BaseTest{
 
 
         //es aris is droebis chamonatvali, mand shevdivar da bolos vigeb
-        WebElement mainDiv = cavea.findElement(By.xpath("./ancestor::div[contains(@class, 'flex-col') and contains(@class, 'gap-6')]"));
-        WebElement options = mainDiv.findElement(By.xpath(".//div[contains(@class, 'grid') and contains(@class, 'grid-cols-2')]"));
-        WebElement lastOption = options.findElement(By.xpath(".//div[contains(@class, 'cursor-pointer')][last()]"));
+        WebElement lastOption = Util.getLastTimeOption(cavea);
 
         // es imito miweria ro ricxvi da tarigi vipovo shemdeg shesamowmeblad
         WebElement lastOptionDesc = lastOption.findElement(By.cssSelector(".items-end"));

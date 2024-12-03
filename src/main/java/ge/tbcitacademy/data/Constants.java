@@ -21,6 +21,7 @@ public class Constants {
     public static final String MOVIEERROR = "Could not find a movie that is played in the mentioned cinema";
     public static final String PRICEERROR = "Could not find any elements in the specified price range";
     public static final String BROWSERERROR = "Invalid browser name";
+    public static final String NOFREESEATSERROR = "There are no free seats lets for this movie";
 
 
 }
